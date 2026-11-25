@@ -3,21 +3,26 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "main": "electron/main.cjs",
   "engines": {
     "node": ">=22.13.0 <23"
   },
   "scripts": {
     "dev": "vite",
     "start": "vite",
+    "dev:electron": "electron .",
     "typecheck": "tsc -b",
     "build": "tsc -b && vite build",
+    "build:electron": "electron-builder",
     "lint": "oxlint",
     "preview": "vite preview",
     "test": "vitest run",
     "test:unit": "vitest run --project unit --passWithNoTests",
     "test:components": "vitest run --project components",
     "test:coverage": "vitest run --coverage",
-    "test:e2e": "playwright test --pass-with-no-tests"
+    "test:e2e": "playwright test --pass-with-no-tests",
+    "dist:win": "electron-builder --win",
+    "dist:mac": "electron-builder --mac"
   },
   "dependencies": {
     "qrcode.react": "^4.2.0",
@@ -34,11 +39,41 @@
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",
     "@vitest/coverage-v8": "^5.1.1",
+    "electron": "^44.4.5",
+    "electron-builder": "^26.15.3",
     "jsdom": "^29.1.1",
     "msw": "^2.15.0",
     "oxlint": "^1.81.0",
     "typescript": "~6.0.2",
     "vite": "^8.3.0",
     "vitest": "^5.1.1"
+  },
+  "build": {
+    "appId": "com.cafeteria.coffeespos.terminal",
+    "productName": "CoffeePOS Terminal",
+    "files": [
+      "dist/**/*",
+      "electron/**/*"
+    ],
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    }
   }
 }
