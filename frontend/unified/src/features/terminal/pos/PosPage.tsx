@@ -36,6 +36,12 @@ type DraftLine = PosLineInput & {
 
 type FoundCustomer = OrderCustomerMinimum & { identifier: string };
 
+function isSafeImageUrl(url: string | null): url is string {
+  if (url === null) return false;
+  if (/^https?:\/\//i.test(url)) return true;
+  return /^\/(?![\\/])/.test(url);
+}
+
 /** POS draft only: the catalog and the API remain the source of truth. */
 export function PosPage() {
   const [products, setProducts] = useState<CatalogProduct[]>([]);
@@ -290,7 +296,11 @@ export function PosPage() {
               >
                 <span className="pos-visually-hidden">Personalizar </span>
                 <span className="pos-product-copy">
-                  {product.imageUrl === null && <span className="pos-product-placeholder">Sin imagen</span>}
+                  {isSafeImageUrl(product.imageUrl) ? (
+                    <img className="pos-product-image" src={product.imageUrl} alt="" loading="lazy" />
+                  ) : (
+                    <span className="pos-product-placeholder">Sin imagen</span>
+                  )}
                   <strong className="product-title">{product.name}</strong>
                   {product.description && <span className="product-desc">{product.description}</span>}
                 </span>

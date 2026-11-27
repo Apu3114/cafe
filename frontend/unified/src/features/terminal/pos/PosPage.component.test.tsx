@@ -109,6 +109,23 @@ describe('Terminal POS (TASK-14)', () => {
     expect(within(catalog).getByRole('button', { name: /Personalizar.*Latte.*\$65\.00/ })).toBeVisible();
   });
 
+  test('renders same-origin product images in POS instead of the placeholder', async () => {
+    server.use(
+      http.get('/api/v1/categories', () => HttpResponse.json({ data: [
+        { id: '1', name: 'Café' },
+      ], page: { limit: 100, nextCursor: null } })),
+      http.get('/api/v1/products', () => HttpResponse.json({ data: [
+        { ...product, imageUrl: '/productos/latte.jpg' },
+      ], page: { limit: 100, nextCursor: null } })),
+    );
+    renderPos();
+    const catalog = await screen.findByRole('region', { name: 'Productos disponibles' });
+    const image = catalog.querySelector('img.pos-product-image');
+    expect(image).not.toBeNull();
+    expect(image).toHaveAttribute('src', '/productos/latte.jpg');
+    expect(within(catalog).queryByText('Sin imagen')).not.toBeInTheDocument();
+  });
+
   test('creates a pending cashier order with a searched customer and no payment claim', async () => {
     let orderBody: unknown;
     let orderKey: string | undefined;

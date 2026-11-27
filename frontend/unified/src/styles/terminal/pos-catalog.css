@@ -121,6 +121,14 @@
   clip-path: inset(50%);
   white-space: nowrap;
 }
+.terminal-layout .pos-catalog-panel .pos-product-image {
+  display: block;
+  width: 100%;
+  height: 96px;
+  border-radius: 10px;
+  background: #f1f5f9;
+  object-fit: cover;
+}
 .terminal-layout .pos-catalog-panel .pos-product-placeholder {
   color: #64748b;
   font-size: .7rem;

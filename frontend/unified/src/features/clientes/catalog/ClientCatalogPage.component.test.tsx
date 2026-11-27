@@ -19,7 +19,7 @@ const productsPage1 = [
     name: 'Latte',
     description: 'Espresso con leche vaporizada',
     basePriceCents: '6500',
-    imageUrl: null,
+    imageUrl: '/productos/latte.jpg',
     isAvailable: true,
   },
 ];
@@ -132,6 +132,23 @@ describe('Client catalog and customization (TASK-10)', () => {
     expect(screen.getByRole('heading', { name: 'Sin productos en esta categoría' })).toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'Ver todas las categorías' }));
     expect(screen.getByRole('heading', { name: 'Latte' })).toBeInTheDocument();
+  });
+
+  test('renders same-origin product images instead of the placeholder', async () => {
+    server.use(
+      http.get('/api/v1/auth/me', () => HttpResponse.json({ code: 'UNAUTHENTICATED' }, { status: 401 })),
+      http.get('/api/v1/categories', () =>
+        HttpResponse.json({ data: categories, page: { limit: 100, nextCursor: null } }),
+      ),
+      http.get('/api/v1/products', () =>
+        HttpResponse.json({ data: productsPage1, page: { limit: 100, nextCursor: null } }),
+      ),
+    );
+
+    renderMenu();
+    const image = await screen.findByRole('img', { name: 'Latte' });
+    expect(image).toHaveAttribute('src', '/productos/latte.jpg');
+    expect(screen.queryByText('Sin imagen')).not.toBeInTheDocument();
   });
 
   test('ignores legacy localStorage catalog caches during empty and error states and supports retry', async () => {

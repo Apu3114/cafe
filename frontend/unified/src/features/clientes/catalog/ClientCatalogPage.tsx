@@ -19,7 +19,10 @@ import {
 const ALL_CATEGORIES_ID = '__all__';
 
 function isSafeImageUrl(url: string | null): url is string {
-  return url !== null && /^https?:\/\//i.test(url);
+  if (url === null) return false;
+  if (/^https?:\/\//i.test(url)) return true;
+  // Rutas del mismo origen (por ejemplo /productos/latte.jpg), sin permitir //host ni /\host.
+  return /^\/(?![\\/])/.test(url);
 }
 
 /** Public and customer catalog browsing page backed exclusively by API responses. */
