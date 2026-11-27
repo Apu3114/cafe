@@ -35,6 +35,11 @@ function LandingPage() {
     <main id="main-content" tabIndex={-1} className="landing-page">
       <section className="landing-shell" aria-labelledby="landing-title">
         <p className="landing-eyebrow">Coffee´s POS</p>
+        <img
+          className="landing-hero"
+          src="/productos/latte.jpg"
+          alt="Taza de latte con arte sobre una mesa de madera"
+        />
         <h1 id="landing-title">Aplicación unificada de cafetería</h1>
         <p className="landing-subtitle">Pedidos de clientes y operación de terminal en un solo lugar.</p>
         <div className="landing-areas">

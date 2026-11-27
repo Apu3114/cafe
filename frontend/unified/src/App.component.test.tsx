@@ -47,6 +47,12 @@ describe('application routes', () => {
     expect(await screen.findByRole('heading', { name: heading })).toBeInTheDocument();
   });
 
+  test('shows the local hero image on the landing page', async () => {
+    renderRoute('/');
+    await screen.findByRole('heading', { name: 'Aplicación unificada de cafetería' });
+    expect(screen.getByRole('img', { name: /taza de latte/i })).toHaveAttribute('src', '/productos/latte.jpg');
+  });
+
   test('keeps client and terminal layouts separate', async () => {
     const { unmount } = renderRoute('/cliente/menu');
     expect(await screen.findByRole('navigation', { name: 'Navegación de cliente' })).toBeInTheDocument();
